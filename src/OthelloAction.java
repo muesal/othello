@@ -92,7 +92,7 @@ public class OthelloAction {
 
     /**
      * Returns true if this is a pass move, indicating that the player has no legal
-     * moves. Otherwise returns false.
+     * moves. Otherwise, returns false.
      */
     public boolean isPassMove() {
         return pass;

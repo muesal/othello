@@ -18,7 +18,7 @@ public class OthelloPosition {
 
     /**
      * The representation of the board. For convenience, the array actually has two
-     * columns and two rows more that the actual game board. The 'middle' is used
+     * columns and two rows more than the actual game board. The 'middle' is used
      * for the board. The first index is for rows, and the second for columns. This
      * means that for a standard 8x8 game board, <code>board[1][1]</code> represents
      * the upper left corner, <code>board[1][8]</code> the upper right corner,
@@ -45,11 +45,7 @@ public class OthelloPosition {
                     board[i][j] = 'E';
         } else {
             board = new char[BOARD_SIZE + 2][BOARD_SIZE + 2];
-            if (s.charAt(0) == 'W') {
-                maxPlayer = true;
-            } else {
-                maxPlayer = false;
-            }
+            maxPlayer = s.charAt(0) == 'W';
             for (int i = 1; i <= 64; i++) {
                 char c;
                 if (s.charAt(i) == 'E') {
@@ -83,17 +79,12 @@ public class OthelloPosition {
      * moves in the position. If the list is empty, there are no legal moves for the
      * player who has the move.
      */
-    public LinkedList getMoves() {
-        boolean[][] candidates = new boolean[BOARD_SIZE][BOARD_SIZE];
-        LinkedList<OthelloAction> moves = new LinkedList<OthelloAction>();
+    public LinkedList<OthelloAction> getMoves() {
+        LinkedList<OthelloAction> moves = new LinkedList<>();
         for (int i = 0; i < BOARD_SIZE; i++)
             for (int j = 0; j < BOARD_SIZE; j++)
-                candidates[i][j] = isCandidate(i + 1, j + 1);
-        for (int i = 0; i < BOARD_SIZE; i++)
-            for (int j = 0; j < BOARD_SIZE; j++)
-                if (candidates[i][j])
-                    if (isMove(i + 1, j + 1))
-                        moves.add(new OthelloAction(i + 1, j + 1));
+                if(isCandidate(i + 1, j + 1) && isMove(i + 1, j + 1))
+                    moves.add(new OthelloAction(i + 1, j + 1));
         return moves;
     }
 
@@ -101,24 +92,14 @@ public class OthelloPosition {
      * Check if it is possible to do a move from this position
      */
     private boolean isMove(int row, int column) {
-        if (checkNorth(row, column))
-            return true;
-        if (checkNorthEast(row, column))
-            return true;
-        if (checkEast(row, column))
-            return true;
-        if (checkSouthEast(row, column))
-            return true;
-        if (checkSouth(row, column))
-            return true;
-        if (checkSouthWest(row, column))
-            return true;
-        if (checkWest(row, column))
-            return true;
-        if (checkNorthWest(row, column))
-            return true;
-
-        return false;
+        return checkNorth(row, column) ||
+                checkNorthEast(row, column) ||
+                checkEast(row, column) ||
+                checkSouthEast(row, column) ||
+                checkSouth(row, column) ||
+                checkSouthWest(row, column) ||
+                checkWest(row, column) ||
+                checkNorthWest(row, column);
     }
 
     /**
@@ -126,8 +107,9 @@ public class OthelloPosition {
      */
     private boolean checkNorth(int row, int column) {
         if (!isOpponentSquare(row - 1, column))
-            return false;
+            return false; // field below must be of the opponents color
         for (int i = row - 2; i > 0; i--) {
+            // Somewhere below the field must be a tile of the players color
             if (isFree(i, column))
                 return false;
             if (isOwnSquare(i, column))
@@ -245,36 +227,26 @@ public class OthelloPosition {
      * Check if the position is occupied by the opponent
      */
     private boolean isOpponentSquare(int row, int column) {
-        if (maxPlayer && (board[row][column] == 'B'))
-            return true;
-        if (!maxPlayer && (board[row][column] == 'W'))
-            return true;
-        return false;
+        return (maxPlayer && (board[row][column] == 'B')) ||
+                (!maxPlayer && (board[row][column] == 'W'));
     }
 
     /**
      * Check if the position is occupied by the player
      */
     private boolean isOwnSquare(int row, int column) {
-        if (!maxPlayer && (board[row][column] == 'B'))
-            return true;
-        if (maxPlayer && (board[row][column] == 'W'))
-            return true;
-        return false;
+        return (!maxPlayer && (board[row][column] == 'B')) ||
+                (maxPlayer && (board[row][column] == 'W'));
     }
 
     /**
-     * Check if the position is a candidate for a move (not empty and has a
+     * Check if the position is a candidate for a move (empty and has a
      * neighbour)
      * 
      * @return true if it is a candidate
      */
     private boolean isCandidate(int row, int column) {
-        if (!isFree(row, column))
-            return false;
-        if (hasNeighbor(row, column))
-            return true;
-        return false;
+        return isFree(row, column) && hasNeighbor(row, column);
     }
 
     /**
@@ -283,32 +255,21 @@ public class OthelloPosition {
      * @return true if is has any neighbours
      */
     private boolean hasNeighbor(int row, int column) {
-        if (!isFree(row - 1, column))
-            return true;
-        if (!isFree(row - 1, column + 1))
-            return true;
-        if (!isFree(row, column + 1))
-            return true;
-        if (!isFree(row + 1, column + 1))
-            return true;
-        if (!isFree(row + 1, column))
-            return true;
-        if (!isFree(row + 1, column - 1))
-            return true;
-        if (!isFree(row, column - 1))
-            return true;
-        if (!isFree(row - 1, column - 1))
-            return true;
-        return false;
+        return !isFree(row - 1, column) ||
+                !isFree(row - 1, column + 1) ||
+                !isFree(row, column + 1) ||
+                !isFree(row + 1, column + 1) ||
+                !isFree(row + 1, column) ||
+                !isFree(row + 1, column - 1) ||
+                !isFree(row, column - 1) ||
+                !isFree(row - 1, column - 1);
     }
 
     /**
      * Check if the position is free/empty
      */
     private boolean isFree(int row, int column) {
-        if (board[row][column] == 'E')
-            return true;
-        return false;
+        return board[row][column] == 'E';
     }
 
     /* toMove */
@@ -329,6 +290,9 @@ public class OthelloPosition {
         /*
          * TODO: write the code for this method and whatever helper functions it needs.
          */
+
+
+        return this;
     }
 
     /**
@@ -338,8 +302,7 @@ public class OthelloPosition {
         OthelloPosition newPosition = new OthelloPosition();
         newPosition.maxPlayer = maxPlayer;
         for (int i = 0; i < BOARD_SIZE + 2; i++)
-            for (int j = 0; j < BOARD_SIZE + 2; j++)
-                newPosition.board[i][j] = board[i][j];
+            System.arraycopy(board[i], 0, newPosition.board[i], 0, BOARD_SIZE + 2);
         return newPosition;
     }
 
@@ -384,12 +347,12 @@ public class OthelloPosition {
     }
 
     public String toString() {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         char c, d;
         if (maxPlayer) {
-            s += "W";
+            s.append("W");
         } else {
-            s += "B";
+            s.append("B");
         }
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
@@ -401,10 +364,10 @@ public class OthelloPosition {
                 } else {
                     c = 'E';
                 }
-                s += c;
+                s.append(c);
             }
         }
-        return s;
+        return s.toString();
     }
 
 }
