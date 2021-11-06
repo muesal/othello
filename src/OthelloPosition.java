@@ -279,6 +279,11 @@ public class OthelloPosition {
         return maxPlayer;
     }
 
+    /** Change the player. */
+    public void nextMove() {
+        maxPlayer = !maxPlayer;
+    }
+
     /* makeMove and helper functions */
 
     /**
@@ -292,7 +297,22 @@ public class OthelloPosition {
          */
 
 
+        // TODO nextMove();
         return this;
+    }
+
+    public int score() {
+        int black = 0;
+        int white = 0;
+        for (char[] row : board) {
+            for (char field : row) {
+                if (field == 'B')
+                    black++;
+                else if (field == 'W')
+                    white++;
+            }
+        }
+        return white - black;
     }
 
     /**
