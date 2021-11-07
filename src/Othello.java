@@ -5,7 +5,7 @@ public class Othello {
         String board = args.length >= 1 ? args[0] : "WEEEEEEEEEEEEEEEEEEEEEEEEEEEOXEEEEEEXOEEEEEEEEEEEEEEEEEEEEEEEEEEE";
         int limit = args.length >= 2 ? Integer.parseInt(args[1]) : 5;
 
-        // TODO print arguments?
+        // TODO error messages if wrong / no arguments?
 
         // start the timer
         int time = 0; // todo: replace with timer
@@ -19,12 +19,12 @@ public class Othello {
         // start iterative deepening
         int depth = 1;
         algorithm.setSearchDepth(depth);
-        OthelloAction action = algorithm.evaluate(position);
+        OthelloAction action = algorithm.searchAction(position);
 
         // todo: use a thread to have correct time (https://www.baeldung.com/java-stop-execution-after-certain-time)
         while(time < limit) {
             algorithm.setSearchDepth(++depth);
-            action = algorithm.evaluate(position);
+            action = algorithm.searchAction(position);
             time++;
         }
 

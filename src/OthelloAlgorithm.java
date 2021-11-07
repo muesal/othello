@@ -16,16 +16,16 @@ public interface OthelloAlgorithm {
 	 * Sets the <code>OthelloEvaluator</code> the algorithm is to use for
 	 * heuristic evaluation.
 	 */
-	public void setEvaluator(OthelloEvaluator evaluator);
+	void setEvaluator(OthelloEvaluator evaluator);
 
 	/**
 	 * Returns the <code>OthelloAction</code> the algorithm considers to be the
 	 * best move.
 	 */
-	public OthelloAction evaluate(OthelloPosition position);
+	OthelloAction searchAction(OthelloPosition position);
 
 	/** Sets the maximum search depth of the algorithm. */
-	public void setSearchDepth(int depth);
+	void setSearchDepth(int depth);
 
 	void setPlayer(boolean maxPlayer);
 }

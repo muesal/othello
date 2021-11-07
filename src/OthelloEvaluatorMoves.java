@@ -14,23 +14,23 @@ public class OthelloEvaluatorMoves implements OthelloEvaluator {
 	/** Count the number of moves the next player has.
 	 * Idea from Paper: An Analysis of Heuristics in Othello, University of Washington */
 	public int evaluate(OthelloPosition position) {
-		// TODO: set move to current player (constructor which takes a player?)
+		boolean originalMove = position.toMove(); // true, if Max turn
+		if (!originalMove) {
+			// it must be max turn
+			position.nextMove();
+		}
 		int my_moves = position.getMoves().size();
 		position.nextMove();
 		int opponents_moves = position.getMoves().size();
 
 		int heuristic = 0;
-		if (my_moves != -opponents_moves) {
+		if (my_moves + opponents_moves != 0) {
 			heuristic = 100 * (my_moves - opponents_moves) / (my_moves + opponents_moves);
-		} else if (my_moves == 0 && opponents_moves == 0) {
-			int score = position.score();
-			if (position.toMove()) { // max's move means min had first move
-				score = -score; // score for black
-			}
-
-			heuristic = score == 0 ? 50 : score > 0 ? 101 : -1; // center, more or less than extreme of heuristic
 		}
-		return heuristic - 50; // -50, since percent value: ratio <50% is more fabourable for player 2
+
+		position.maxPlayer = originalMove; // restore original state
+
+		return heuristic;
 	}
 
 }
