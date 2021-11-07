@@ -4,16 +4,20 @@ import java.lang.*;
 /**
  * This class is used to represent game positions. It uses a 2-dimensional char
  * array for the board and a Boolean to keep track of which player has the move.
- * 
+ *
  * @author Henrik Bj&ouml;rklund
  */
 
 public class OthelloPosition {
 
-    /** For a normal Othello game, BOARD_SIZE is 8. */
+    /**
+     * For a normal Othello game, BOARD_SIZE is 8.
+     */
     protected static final int BOARD_SIZE = 8;
 
-    /** True if the first player (white) has the move. */
+    /**
+     * True if the first player (white) has the move.
+     */
     protected boolean maxPlayer;
 
     /**
@@ -28,7 +32,9 @@ public class OthelloPosition {
      */
     protected char[][] board;
 
-    /** Creates a new position and sets all squares to empty. */
+    /**
+     * Creates a new position and sets all squares to empty.
+     */
     public OthelloPosition() {
         board = new char[BOARD_SIZE + 2][BOARD_SIZE + 2];
         for (int i = 0; i < BOARD_SIZE + 2; i++)
@@ -83,7 +89,7 @@ public class OthelloPosition {
         LinkedList<OthelloAction> moves = new LinkedList<>();
         for (int i = 0; i < BOARD_SIZE; i++)
             for (int j = 0; j < BOARD_SIZE; j++)
-                if(isCandidate(i + 1, j + 1) && isMove(i + 1, j + 1))
+                if (isCandidate(i + 1, j + 1) && isMove(i + 1, j + 1))
                     moves.add(new OthelloAction(i + 1, j + 1));
         return moves;
     }
@@ -242,7 +248,7 @@ public class OthelloPosition {
     /**
      * Check if the position is a candidate for a move (empty and has a
      * neighbour)
-     * 
+     *
      * @return true if it is a candidate
      */
     private boolean isCandidate(int row, int column) {
@@ -251,7 +257,7 @@ public class OthelloPosition {
 
     /**
      * Check if the position has any non-empty squares
-     * 
+     *
      * @return true if is has any neighbours
      */
     private boolean hasNeighbor(int row, int column) {
@@ -274,12 +280,16 @@ public class OthelloPosition {
 
     /* toMove */
 
-    /** Returns true if the first player (white) has the move, otherwise false. */
+    /**
+     * Returns true if the first player (white) has the move, otherwise false.
+     */
     public boolean toMove() {
         return maxPlayer;
     }
 
-    /** Change the player. */
+    /**
+     * Change the player.
+     */
     public void nextMove() {
         maxPlayer = !maxPlayer;
     }
@@ -292,15 +302,92 @@ public class OthelloPosition {
      */
     public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException {
 
-        /*
-         * TODO: write the code for this method and whatever helper functions it needs.
-         */
+        OthelloPosition new_position = clone();
 
+        // Pass move: just change player
+        if (!action.isPassMove()) {
+            int row = action.getRow();
+            int column = action.getColumn();
 
-        // TODO nextMove();
-        return this;
+            char player = maxPlayer ? 'W' : 'B';
+
+            // Otherwise, set the field to the players color
+            if (!isFree(row, column)) throw new IllegalMoveException(action);
+            new_position.board[row][column] = player;
+
+            // and flip all possible pieces
+            try {
+                if (checkNorth(row, column)) {
+                    int i = row - 1;
+                    while (new_position.isOpponentSquare(i, column)) {
+                        new_position.board[i][column] = player;
+                        i--;
+                    }
+                }
+                if (checkEast(row, column)) {
+                    int i = column + 1;
+                    while (new_position.isOpponentSquare(row, i)) {
+                        new_position.board[row][i] = player;
+                        i++;
+                    }
+                }
+                if (checkSouth(row, column)) {
+                    int i = row + 1;
+                    while (new_position.isOpponentSquare(i, column)) {
+                        new_position.board[i][column] = player;
+                        i++;
+                    }
+                }
+                if (checkWest(row, column)) {
+                    int i = column - 1;
+                    while (new_position.isOpponentSquare(row, i)) {
+                        new_position.board[row][i] = player;
+                        i--;
+                    }
+                }
+                if (checkNorthEast(row, column)) {
+                    int i = 1;
+                    while (new_position.isOpponentSquare(row - i, column + i)) {
+                        new_position.board[row - i][column + i] = player;
+                        i++;
+                    }
+                }
+                if (checkSouthEast(row, column)) {
+                    int i = 1;
+                    while (new_position.isOpponentSquare(row + i, column + i)) {
+                        new_position.board[row + i][column + i] = player;
+                        i++;
+                    }
+                }
+                if (checkSouthWest(row, column)) {
+                    int i = 1;
+                    while (new_position.isOpponentSquare(row + i, column - i)) {
+                        new_position.board[row + i][column - i] = player;
+                        i++;
+                    }
+                }
+                if (checkNorthWest(row, column)) {
+                    int i = 1;
+                    while (new_position.isOpponentSquare(row - i, column - i)) {
+                        new_position.board[row - i][column - i] = player;
+                        i++;
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // Catch this, in case one of the checks is incorrect
+                throw new IllegalMoveException(action);
+            }
+        }
+
+        new_position.nextMove();
+        return new_position;
     }
 
+    /**
+     * Calculate the score of the game.
+     *
+     * @return the score: #white pieces - #black pieces
+     */
     public int score() {
         int black = 0;
         int white = 0;
