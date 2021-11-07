@@ -23,9 +23,10 @@ public class OthelloEvaluatorMoves implements OthelloEvaluator {
 		position.nextMove();
 		int opponents_moves = position.getMoves().size();
 
-		int heuristic = 0;
+		int heuristic = position.score();
 		if (my_moves + opponents_moves != 0) {
-			heuristic = 100 * (my_moves - opponents_moves) / (my_moves + opponents_moves);
+			// if one or both move-counts are greater than 0 return the mobility heuristic
+			heuristic = 64 * (my_moves - opponents_moves) / (my_moves + opponents_moves);
 		}
 
 		position.maxPlayer = originalMove; // restore original state
