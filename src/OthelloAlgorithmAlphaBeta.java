@@ -43,8 +43,8 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * best move, using alpha-beta pruning.
      */
     public OthelloAction searchAction(OthelloPosition position) throws InterruptedException {
-        OthelloAction action = maxPlayer ? initialMaxValue(position) : initialMinValue(position); // TODO: pass because no moves possible takes long, why? something in the heuristic is bad, it makes really bad moves
-        return action;
+        interrupted = false;
+        return maxPlayer ? initialMaxValue(position) : initialMinValue(position);
     }
 
     private OthelloAction initialMaxValue(OthelloPosition position) throws InterruptedException {
