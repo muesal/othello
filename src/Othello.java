@@ -23,7 +23,7 @@ public class Othello {
             board = args[0];
             limit = Integer.parseInt(args[1]);
         }
-        long endTime = System.currentTimeMillis() + limit * 1000L; // end in now + 95% of the given limit
+        long endTime = System.currentTimeMillis() + limit * 1000L; // timestamp of when the algorithm should terminate
 
         // initialise Othello
         OthelloPosition position = new OthelloPosition(board);
@@ -38,28 +38,37 @@ public class Othello {
 
         // start iterative deepening
         final ExecutorService service = Executors.newSingleThreadExecutor();
+        // update the remaining time
         long remainingTime = endTime - System.currentTimeMillis();
 
         // then get as deep as possible
         while (remainingTime > 0) {
 
+            // increase the search depth
             algorithm.setSearchDepth(++depth);
+            // create a thread for the search algorithm
             final Future<OthelloAction> search = service.submit(() -> (algorithm.searchAction(position)));
 
             try {
+                // get the result of the search, continue in this thread after remainingTime Milliseconds
                 action = search.get(remainingTime, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
-                System.err.println("Interrupted at depth " + depth + ", stalled " +
-                        (endTime - System.currentTimeMillis()) + " ms");
+                // This exception occurs, if the get() is interrupted because of the time limit
+                //System.err.println("Interrupted at depth " + depth); // debug print
+                // interrupt the search algorithm
                 algorithm.interrupt();
             } catch (ExecutionException e) {
+                // This may occur if something else in the get() does not go as expected
                 e.printStackTrace();
             }
 
+            // update the remaining time
             remainingTime = endTime - System.currentTimeMillis();
         }
+        // shut down the service
         service.shutdownNow();
 
+        // print the action
         action.print();
     }
 }
