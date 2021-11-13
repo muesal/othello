@@ -22,10 +22,14 @@ public interface OthelloAlgorithm {
 	 * Returns the <code>OthelloAction</code> the algorithm considers to be the
 	 * best move.
 	 */
-	OthelloAction searchAction(OthelloPosition position);
+	OthelloAction searchAction(OthelloPosition position) throws InterruptedException;
 
 	/** Sets the maximum search depth of the algorithm. */
 	void setSearchDepth(int depth);
 
+	/** set the player, true if it is white's turn */
 	void setPlayer(boolean maxPlayer);
+
+	/** set the boolean interrupt to true, to interrupt the search*/
+	void interrupt();
 }

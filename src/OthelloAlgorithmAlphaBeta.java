@@ -17,6 +17,7 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
     OthelloEvaluator evaluator;
     int depth;
     protected boolean maxPlayer;
+    protected boolean interrupted = false;
 
     public OthelloAlgorithmAlphaBeta(OthelloEvaluator evaluator) {
         setEvaluator(evaluator);
@@ -41,11 +42,12 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * Returns the <code>OthelloAction</code> the algorithm considers to be the
      * best move, using alpha-beta pruning.
      */
-    public OthelloAction searchAction(OthelloPosition position) {
-        return maxPlayer ? initialMaxValue(position) : initialMinValue(position);
+    public OthelloAction searchAction(OthelloPosition position) throws InterruptedException {
+        OthelloAction action = maxPlayer ? initialMaxValue(position) : initialMinValue(position); // TODO: pass because no moves possible takes long, why? something in the heuristic is bad, it makes really bad moves
+        return action;
     }
 
-    private OthelloAction initialMaxValue(OthelloPosition position) {
+    private OthelloAction initialMaxValue(OthelloPosition position) throws InterruptedException {
 
         LinkedList<OthelloAction> moves = position.getMoves();
 
@@ -90,7 +92,7 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
         return action;
     }
 
-    private OthelloAction initialMinValue(OthelloPosition position) {
+    private OthelloAction initialMinValue(OthelloPosition position) throws InterruptedException {
 
         LinkedList<OthelloAction> moves = position.getMoves();
 
@@ -145,7 +147,10 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * @param depth    iteration depth
      * @return maxValue that can be achieved, or value of the leave
      */
-    private int maxValue(OthelloPosition position, int alpha, int beta, int depth) {
+    private int maxValue(OthelloPosition position, int alpha, int beta, int depth) throws InterruptedException {
+        if (interrupted) {
+            throw new InterruptedException();
+        }
         if (depth == 0) {
             // if depth is reached return heuristic value
             return evaluator.evaluate(position);
@@ -206,7 +211,10 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * @param depth    iteration depth
      * @return minValue that can be achieved, or value of the leave
      */
-    private int minValue(OthelloPosition position, int alpha, int beta, int depth) {
+    private int minValue(OthelloPosition position, int alpha, int beta, int depth) throws InterruptedException {
+        if (interrupted) {
+            throw new InterruptedException();
+        }
         if (depth == 0) {
             // if depth is reached return heuristic value
             return evaluator.evaluate(position);
@@ -261,4 +269,6 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
     public void setSearchDepth(int depth) {
         this.depth = depth;
     }
+
+    public void interrupt() {interrupted = true;}
 }

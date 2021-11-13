@@ -1,6 +1,11 @@
+import java.util.concurrent.*;
+
+// start for white: ./othellostart /home/salome/Documents/othello/src/othello.sh ./othello_naive 5
+// start for black: ./othellostart ./othello_naive /home/salome/Documents/othello/src/othello.sh 5
+
 public class Othello {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // get / set input arguments
         String board;
         int limit;
@@ -18,9 +23,7 @@ public class Othello {
             board = args[0];
             limit = Integer.parseInt(args[1]);
         }
-
-        // start the timer
-        int time = 0; // todo: replace with timer
+        long endTime = System.currentTimeMillis() + limit * 1000L; // end in now + 95% of the given limit
 
         // initialise Othello
         OthelloPosition position = new OthelloPosition(board);
@@ -28,17 +31,34 @@ public class Othello {
         OthelloAlgorithm algorithm = new OthelloAlgorithmAlphaBeta(evaluator);
         algorithm.setPlayer(board.charAt(0) == 'W');
 
-        // start iterative deepening
+        // depth 1 can/must always be executed
         int depth = 1;
         algorithm.setSearchDepth(depth);
         OthelloAction action = algorithm.searchAction(position);
 
-        // todo: use a thread to have correct time (https://www.baeldung.com/java-stop-execution-after-certain-time)
-        while(time < limit) {
+        // start iterative deepening
+        final ExecutorService service = Executors.newSingleThreadExecutor();
+        long remainingTime = endTime - System.currentTimeMillis();
+
+        // then get as deep as possible
+        while (remainingTime > 0) {
+
             algorithm.setSearchDepth(++depth);
-            action = algorithm.searchAction(position);
-            time++;
+            final Future<OthelloAction> search = service.submit(() -> (algorithm.searchAction(position)));
+
+            try {
+                action = search.get(remainingTime, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                System.err.println("Interrupted at depth " + depth + ", stalled " +
+                        (endTime - System.currentTimeMillis()) + " ms");
+                algorithm.interrupt();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            remainingTime = endTime - System.currentTimeMillis();
         }
+        service.shutdownNow();
 
         action.print();
     }
