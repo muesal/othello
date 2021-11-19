@@ -47,6 +47,12 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
         return maxPlayer ? initialMaxValue(position) : initialMinValue(position);
     }
 
+    /**
+     * Initial call of alpha-beta for White
+     * @param position the current position of the board
+     * @return the action which should be performed
+     * @throws InterruptedException if the time is up
+     */
     private OthelloAction initialMaxValue(OthelloPosition position) throws InterruptedException {
 
         LinkedList<OthelloAction> moves = position.getMoves();
@@ -92,6 +98,12 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
         return action;
     }
 
+    /**
+     * Initial call of alpha-beta for Black
+     * @param position the current position of the board
+     * @return the action which should be performed
+     * @throws InterruptedException if the time is up
+     */
     private OthelloAction initialMinValue(OthelloPosition position) throws InterruptedException {
 
         LinkedList<OthelloAction> moves = position.getMoves();
@@ -146,6 +158,7 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * @param beta     beta value
      * @param depth    iteration depth
      * @return maxValue that can be achieved, or value of the leave
+     * @throws InterruptedException if the time is up
      */
     private int maxValue(OthelloPosition position, int alpha, int beta, int depth) throws InterruptedException {
         if (interrupted) {
@@ -210,6 +223,7 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
      * @param beta     beta value
      * @param depth    iteration depth
      * @return minValue that can be achieved, or value of the leave
+     * @throws InterruptedException if the time is up
      */
     private int minValue(OthelloPosition position, int alpha, int beta, int depth) throws InterruptedException {
         if (interrupted) {
@@ -270,5 +284,8 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
         this.depth = depth;
     }
 
+    /**
+     * Set interrupted to true, in order to stop the search immediately
+     */
     public void interrupt() {interrupted = true;}
 }

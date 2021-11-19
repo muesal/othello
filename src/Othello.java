@@ -23,11 +23,15 @@ public class Othello {
             board = args[0];
             limit = Integer.parseInt(args[1]);
         }
-        long endTime = System.currentTimeMillis() + limit * 1000L; // timestamp of when the algorithm should terminate
+        long endTime = System.currentTimeMillis() + limit * 950L; // timestamp of when the algorithm should terminate
 
         // initialise Othello
         OthelloPosition position = new OthelloPosition(board);
-        OthelloEvaluator evaluator = new OthelloEvaluatorMoves();
+
+        OthelloEvaluatorCompound evaluator = new OthelloEvaluatorCompound(new OthelloEvaluatorMoves(), new OthelloEvaluatorCount());
+        // OthelloEvaluator evaluator = new OthelloEvaluatorMoves();
+        // OthelloEvaluator evaluator = new OthelloEvaluatorCount();
+
         OthelloAlgorithm algorithm = new OthelloAlgorithmAlphaBeta(evaluator);
         algorithm.setPlayer(board.charAt(0) == 'W');
 
@@ -41,7 +45,7 @@ public class Othello {
         // update the remaining time
         long remainingTime = endTime - System.currentTimeMillis();
 
-        // then get as deep as possible
+        // then go as deep as possible
         while (remainingTime > 0) {
 
             // increase the search depth
@@ -54,7 +58,7 @@ public class Othello {
                 action = search.get(remainingTime, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
                 // This exception occurs, if the get() is interrupted because of the time limit
-                //System.err.println("Interrupted at depth " + depth); // debug print
+                // System.err.println("Interrupted at depth " + depth); // debug print
                 // interrupt the search algorithm
                 algorithm.interrupt();
             } catch (ExecutionException e) {

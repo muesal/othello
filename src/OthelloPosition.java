@@ -403,6 +403,22 @@ public class OthelloPosition {
     }
 
     /**
+     * Count the number of empty fields on the board
+     * @return the number of empty fields on the board
+     */
+    public float getEmpty() {
+        int empty = 0;
+        for (char[] row : board) {
+            for (char field : row) {
+                if (field == 'E')
+                    empty++;
+            }
+        }
+        return empty;
+
+    }
+
+    /**
      * Returns a new <code>OthelloPosition</code>, identical to the current one.
      */
     protected OthelloPosition clone() {
