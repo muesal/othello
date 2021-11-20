@@ -240,7 +240,7 @@ public class OthelloAlgorithmAlphaBeta implements OthelloAlgorithm {
         if (moves.size() == 0) {
             position.nextMove();
 
-            if (position.getMoves().size() == 1) {
+            if (position.getMoves().size() == 0) {
                 // if neither of the players can move, the game is over; return the score
                 return position.score();
             }

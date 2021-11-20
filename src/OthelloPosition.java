@@ -69,15 +69,6 @@ public class OthelloPosition {
 
     }
 
-    /**
-     * Initializes the position by placing four markers in the middle of the board.
-     */
-    public void initialize() {
-        board[BOARD_SIZE / 2][BOARD_SIZE / 2] = board[BOARD_SIZE / 2 + 1][BOARD_SIZE / 2 + 1] = 'W';
-        board[BOARD_SIZE / 2][BOARD_SIZE / 2 + 1] = board[BOARD_SIZE / 2 + 1][BOARD_SIZE / 2] = 'B';
-        maxPlayer = true;
-    }
-
     /* getMoves and helper functions */
 
     /**
@@ -430,44 +421,6 @@ public class OthelloPosition {
     }
 
     /* illustrate and other output functions */
-
-    /**
-     * Draws an ASCII representation of the position. White squares are marked by
-     * '0' while black squares are marked by 'X'.
-     */
-    public void illustrate() {
-        System.out.print("   ");
-        for (int i = 1; i <= BOARD_SIZE; i++)
-            System.out.print("| " + i + " ");
-        System.out.println("|");
-        printHorizontalBorder();
-        for (int i = 1; i <= BOARD_SIZE; i++) {
-            System.out.print(" " + i + " ");
-            for (int j = 1; j <= BOARD_SIZE; j++) {
-                if (board[i][j] == 'W') {
-                    System.out.print("| 0 ");
-                } else if (board[i][j] == 'B') {
-                    System.out.print("| X ");
-                } else {
-                    System.out.print("|   ");
-                }
-            }
-            System.out.println("| " + i + " ");
-            printHorizontalBorder();
-        }
-        System.out.print("   ");
-        for (int i = 1; i <= BOARD_SIZE; i++)
-            System.out.print("| " + i + " ");
-        System.out.println("|\n");
-    }
-
-    private void printHorizontalBorder() {
-        System.out.print("---");
-        for (int i = 1; i <= BOARD_SIZE; i++) {
-            System.out.print("|---");
-        }
-        System.out.println("|---");
-    }
 
     public String toString() {
         StringBuilder s = new StringBuilder();

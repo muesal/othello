@@ -28,7 +28,7 @@ public class Othello {
         // initialise Othello
         OthelloPosition position = new OthelloPosition(board);
 
-        OthelloEvaluatorCompound evaluator = new OthelloEvaluatorCompound(new OthelloEvaluatorMoves(), new OthelloEvaluatorCount());
+         OthelloEvaluatorCompound evaluator = new OthelloEvaluatorCompound(new OthelloEvaluatorMoves(), new OthelloEvaluatorCount());
         // OthelloEvaluator evaluator = new OthelloEvaluatorMoves();
         // OthelloEvaluator evaluator = new OthelloEvaluatorCount();
 
@@ -57,8 +57,6 @@ public class Othello {
                 // get the result of the search, continue in this thread after remainingTime Milliseconds
                 action = search.get(remainingTime, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
-                // This exception occurs, if the get() is interrupted because of the time limit
-                // System.err.println("Interrupted at depth " + depth); // debug print
                 // interrupt the search algorithm
                 algorithm.interrupt();
             } catch (ExecutionException e) {
@@ -71,6 +69,8 @@ public class Othello {
         }
         // shut down the service
         service.shutdownNow();
+
+        // System.err.println("Interrupted at depth " + depth); // debug print
 
         // print the action
         action.print();
