@@ -9,15 +9,11 @@ public class Othello {
         // get / set input arguments
         String board;
         int limit;
-        if (args.length < 1) {
+        if (args.length < 2 || args[0].length() != 65) {
             System.out.println("Two arguments are required. The first should be a string of length 65 representing the " +
                     "board, the second the time limit in seconds.\n" +
                     "Setting board to initial state, time limit to 5.");
             board = "WEEEEEEEEEEEEEEEEEEEEEEEEEEEOXEEEEEEXOEEEEEEEEEEEEEEEEEEEEEEEEEEE";
-            limit = 5;
-        } else if (args.length < 2) {
-            System.out.println("The second argument, the time limit in seconds, is missing. Setting it to 5.");
-            board = args[0];
             limit = 5;
         } else {
             board = args[0];
