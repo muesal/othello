@@ -8,7 +8,7 @@ If no stone can be placed such that stones can be turned, the player must pass t
 The game is over, as soon as no player can make another move, and the player with more stones on the board wins.
 The board is then in a terminal position.
 
-This repository contains a program, which evaluates all possible moves using alpha-beta search.
+This repository contains a program, which evaluates all possible moves using alpha-beta search and returns the best option within a given time limit.
 
 
 After the download the code can be compiled with *javac Othello.java* and executed with *java Othello <board> <time>*.
