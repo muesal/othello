@@ -1,0 +1,14 @@
+\section{Introduction}
+
+Othello is a board game for two players, \textit{white} and \textit{black}.
+In turns they can place pieces of their color on the board, an change the color of some of the pieces already there.
+In the end, the player with more pieces wins.
+
+Using Java we implement an engine that suggests a move, given the configuration of the board and the player, within a given time limit.
+The engine uses an alpha-beta search algorithm and a compound heuristic, combining a score and a mobility heuristic.
+With this heuristic and a time limit of two seconds per move, a naive opponent using the score heuristic and search depth seven can be defeated.
+
+This report is structured into two sections.
+In \cref{sec:implementation} the implemented methods and algorithms are explained, as well as the heuristic.
+Further, we explain how to install and run the program.
+\cref{sec:evaluation} evaluates the different heuristics for both players and different time limits.

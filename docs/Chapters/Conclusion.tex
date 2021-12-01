@@ -1,0 +1,16 @@
+\section{Conclusion}
+
+Implementing a search algorithm for Othello, we looked at three different heuristics.
+Two can beat an agent using the naive heuristic, namely the naive heuristic itself and a compound heuristic using the naive and the mobility heuristic.
+The mobility heuristic on its own is not considered suitable as heuristic, as it does not yield good results.
+
+Our implementation of alpha-beta search runs on an implicit search tree, i.e., the nodes are not stored but computed from their parent, and forgotten after evaluating them.
+If a further speed up were necessary to win, the tree could be built explicitly and stored between the iterations.
+This way, the moves would only have to be computed and applied once per position.
+Further, at iteration $k$, we could order the children of a node according to their value at iteration $k-1$ and then evaluate them in this order.
+This way, better moves would be more likely to be evaluated first, and more parts of the tree could be pruned.
+
+However, winning within the time limit was not a problem, as this was easily done with the naive heuristic.
+Initially, after printing the chosen action the program continued the last search until it was finished, leading it to exceed the time limit.
+Java does not feature a way to kill a thread, so no Java built-ins could be used to solve this problem.
+This could eventually be resolved by throwing an \texttt{InterruptedException} in the search thread, which kills the thread immediately.

@@ -1,0 +1,52 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\floatname{algorithm}{Algorithm}
+\usepackage{hyperref}
+\usepackage[capitalise, noabbrev]{cleveref}
+\newcommand{\todo}[1]{{\color{red}#1}}
+
+\algblock[TryCatch]{try}{endtry}
+\algcblockdefx[TryCatch]{TryCatch}{catch}{endtry}
+	[1]{\textbf{catch} #1}
+
+
+%% ----------------------------------------------------------------
+
+\title{
+    Othello \\
+    \vspace{3em}
+    {\large Umeå University \\
+    Artificial Intelligence - Methods and Applications (5DV181)}
+    \vspace{3em}
+    
+}
+\author{Salome Müller, mcs21smr}
+\date{\today}
+
+\begin{document}
+
+%% Make the title
+\maketitle
+
+\vspace{1em}
+
+%% Write the abstract
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{position1.png}
+\end{figure}
+
+\pagebreak
+
+%% Include all chapters
+\input{./Chapters/Introduction}
+\input{./Chapters/Implementation}
+\input{./Chapters/Evaluation}
+\input{./Chapters/Conclusion}
+
+\end{document}

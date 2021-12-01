@@ -1,0 +1,83 @@
+\section{Evaluation}
+\label{sec:evaluation}
+
+We test our implementation by playing against an agent who uses the naive heuristic and a search depth of seven.
+We evaluate all three heuristics with time limits 2, 4, 6, 8 and 10 seconds.
+The given time limit is strictly adhered to, the average time per move over a game is about 0.2 seconds lower than the limit (e.g., 5.8 s for a limit of 6 s).
+
+\subsection{Naive Heuristic}
+
+As can be seen in~\cref{tab:naive}, the naive heuristic is sufficient to win against the other agent, even though they use the same heuristic.
+This is mainly due to the fact that we use iterative deepening and thus reach higher search depths.
+Our implementation can reach depths ten (2 s) or eleven (10 s).
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{ |c||c|c|c||c|c|c| } 
+ \hline
+ Time & Player & Won & Score & Player & Won & Score \\ \hline \hline
+  2 & White & Yes & 16 & Black & Yes & -16 \\ 
+  4 & White & Yes & 36 & Black & Yes & -35 \\  
+  6 & White & Yes & 36 & Black & Yes & -48 \\  
+  8 & White & Yes & 38 & Black & Yes & -56 \\   
+ 10 & White & Yes & 64 & Black & Yes & -56 \\ 
+ \hline
+\end{tabular}
+\caption{\label{tab:naive} End scores for different time limits when playing as \textit{white} or \textit{black} using the naive heuristic.}
+\end{table}
+
+This heuristic is good when a high search depth can be reached.
+In this case, the heuristic is evaluated on positions which are terminal positions or close to one.
+However, if the search can not go deep and is evaluated on earlier positions of the board, the heuristic value is not reliable, since the board changes a lot in the course of the game.
+If a player has a lot of stones in the beginning this does not necessarily mean that they will have a lot of stones in the end.
+
+
+\subsection{Mobility Heuristic}
+\cref{tab:mobil} shows the results when using the mobility heuristic.
+This heuristic is more computationally complex than the naive heuristic, therefore only depths eight and nine could be reached.
+This heuristic is a lot better for \textit{black} than for \textit{white}, which shows that this heuristic is not reliable on its own.
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{ |c||c|c|c||c|c|c| }
+ \hline
+ Limit & Player & Won & Score & Player & Won & Score \\ \hline \hline
+  2 & White & Yes &  30 & Black & No  & 2 \\ 
+  4 & White & No  & -41 & Black & Yes & -12 \\  
+  6 & White & No  & -12 & Black & Yes & -50 \\  
+  8 & White & No  & -14 & Black & Yes & -50 \\   
+ 10 & White & No  & -13 & Black & Yes & -50 \\ 
+ \hline
+\end{tabular}
+\caption{\label{tab:mobil} End scores for different time limits when playing as \textit{white} or \textit{black} using the mobility heuristic.}
+\end{table}
+
+Opposed to the naive heuristic, the mobility heuristic is assumed to be better for earlier positions.
+In the beginning, it may be better to try and restrict the opponents possibilities.
+However, the quality of the moves is of more importance than their quantity which is why this heuristic does not yield good results.
+
+
+\subsection{Compound Heuristic}
+The best results were achieved with the compound heuristic, even though only depths eight end nine could be reached.
+As can be seen in~\cref{tab:comp}, when playing as \textit{white} we win with more than sixty points for every time limit and with more than forty points when playing as \textit{black}.
+Despite the fact that the mobility heuristic on its own is not satisfactory, it improves the naive heuristic when they are used together, as the reached scores are better.
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{ |c||c|c|c||c|c|c| } 
+ \hline
+ Limit & Player & Won & Score & Player & Won & Score \\ \hline \hline
+  2 & White & Yes & 62 & Black & Yes & -42 \\ 
+  4 & White & Yes & 64 & Black & Yes & -45 \\  
+  6 & White & Yes & 62 & Black & Yes & -46 \\  
+  8 & White & Yes & 62 & Black & Yes & -62 \\   
+ 10 & White & Yes & 64 & Black & Yes & -61 \\ 
+ \hline
+\end{tabular}
+\caption{\label{tab:comp} End scores for different time limits when playing as \textit{white} or \textit{black} using the compound heuristic.}
+\end{table}
+
+An agent using this heuristic uses the best of $h_{n}$ and $h_{m}$.
+In the beginning, when the board is almost empty, the agent tries to restrict the other player's possibilities.
+With time, while the board is being filled, the agent shifts it's focus to yielding a high score.
+Hence, the mobility becomes negligible, while the importance of the amount of stones on the board increases.
